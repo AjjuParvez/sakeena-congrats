@@ -13,23 +13,23 @@
   --card:#ffffff;
   --gold:#C8A24B;
   --gold2:#E6D8A9;
+  --green:#0bb27f;
 }
 
-/* Background */
+/* ---------- Base & Background ---------- */
 html,body{
-  margin:0; padding:0;
-  height:100%; overflow-x:hidden;
+  margin:0; padding:0; height:100%; overflow-x:hidden;
   background: radial-gradient(1200px 800px at 10% -10%, #ffffff 0%, var(--mint) 45%, var(--mint2) 100%);
-  font-family: system-ui, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   color:var(--ink);
 }
 
-/* Layout */
 .wrap{
   position:relative; z-index:1;
   padding:24px 16px 60px;
   display:flex; flex-direction:column; align-items:center; gap:20px;
 }
+
 .section{
   width:min(100%, 900px);
   background:var(--card);
@@ -37,16 +37,16 @@ html,body{
   padding:25px;
   box-shadow:0 12px 36px rgba(0,0,0,.08);
   text-align:center;
+  opacity:0; transform:translateY(12px) scale(.98);
+  animation: fadeInUp .8s ease forwards .15s;
 }
 
-/* Hero */
-.arabic{
-  font-size:32px;
-  margin-bottom:10px;
-  color:#0aa06f;
-  font-weight:900;
+/* Entrance animation */
+@keyframes fadeInUp{
+  to{opacity:1; transform:none;}
 }
 
+/* ---------- Hero ---------- */
 .badge{
   display:inline-block;
   background:#e4fff4;
@@ -55,132 +55,166 @@ html,body{
   border-radius:999px;
   font-weight:700;
   color:#0d9f70;
+  opacity:0; transform:translateY(-6px);
+  animation: fadeIn .8s ease .35s forwards;
+}
+
+.arabic{
+  font-size:32px; font-weight:900; color:#0aa06f; margin:4px 0 10px;
+  text-shadow:0 0 10px rgba(11,178,127,.25), 0 0 22px rgba(11,178,127,.18);
+  position:relative; opacity:0; transform:translateY(-8px);
+  animation: dropGlow .8s ease .05s forwards, noorPulse 3s ease-in-out 1.2s infinite;
+}
+@keyframes dropGlow{to{opacity:1; transform:none;}}
+@keyframes noorPulse{
+  0%,100%{text-shadow:0 0 12px rgba(11,178,127,.22),0 0 26px rgba(11,178,127,.14)}
+  50%{text-shadow:0 0 20px rgba(11,178,127,.38),0 0 38px rgba(11,178,127,.22)}
 }
 
 .hero h1{
-  color:#0bb27f;
-  margin:12px 0;
+  color:var(--green);
+  margin:10px 0 6px;
   font-size:clamp(28px,6vw,40px);
+  letter-spacing:.2px;
+  opacity:0; transform:translateY(6px);
+  animation: fadeIn .9s ease .55s forwards;
 }
-.hero p{ margin:5px 0; }
 
-/* Buttons */
+.hero p{ margin:5px 0; }
+@keyframes fadeIn{to{opacity:1; transform:none;}}
+
+/* Qur'anic verse block (reveals on scroll) */
+.verse{
+  margin-top:12px;
+  font-style:italic; color:#295f4f; opacity:.0;
+  transform:translateY(10px);
+}
+.reveal{ opacity:1 !important; transform:none !important; transition:all .7s ease; }
+
+/* ---------- Buttons & Hints ---------- */
 .btn{
   padding:12px 20px;
   background:white;
-  border:2px solid #0bb27f;
-  color:#0bb27f;
+  border:2px solid var(--green);
+  color:var(--green);
   border-radius:999px;
   font-weight:700;
   cursor:pointer;
-  display:none; /* hidden initially */
+  display:none; /* sequential unlock */
 }
-.btn:hover{
-  background:#0bb27f;
-  color:white;
-}
+.btn:hover{ background:var(--green); color:white; }
 
-.hint {
-  margin-top:12px;
-  font-size:16px;
-  font-weight:600;
-  color:#0bb27f;
+.hint{
+  margin-top:10px; font-size:15px; font-weight:600; color:var(--green);
   display:none;
 }
 
-/* Modals */
+/* Share button (always visible) */
+.shareRow{
+  margin-top:16px; display:flex; justify-content:center; gap:10px;
+}
+.btn-share{
+  padding:10px 14px; border-radius:999px;
+  border:2px dashed var(--green); background:#fff; color:#0a8c64; font-weight:700; cursor:pointer;
+}
+.btn-share:hover{ background:#eafff6; }
+
+/* ---------- Modals ---------- */
 .modal{
   position:fixed; inset:0;
   background:rgba(0,0,0,.55);
-  display:none;
-  justify-content:center; align-items:center;
-  z-index:9999;
+  display:none; justify-content:center; align-items:center; z-index:9999;
 }
 .modal.show{ display:flex; }
 
 .panel{
-  width:min(96vw, 800px);
-  background:white;
-  border-radius:20px;
-  padding:26px;
-  box-shadow:0 20px 40px rgba(0,0,0,.25);
-  position:relative;
-  max-height:85vh;
-  overflow:auto;
+  width:min(96vw, 800px); background:white; border-radius:20px; padding:26px;
+  box-shadow:0 20px 40px rgba(0,0,0,.25); position:relative; max-height:85vh; overflow:auto;
+  opacity:0; transform:scale(.96);
+  animation: pop .25s ease forwards;
 }
+@keyframes pop{to{opacity:1; transform:none;}}
+
 .close{
   position:absolute; top:12px; right:12px;
-  background:#0bb27f; color:white;
+  background:var(--green); color:white;
   padding:6px 12px; border-radius:999px;
   border:none; cursor:pointer; font-weight:700;
 }
 
-/* Certificate */
+/* ---------- Certificate (with geometric ornament) ---------- */
 .certificate{
-  background:#fffef7;
+  background:
+    radial-gradient(120% 120% at 100% 0%, #fffef7 0%, #fffdf4 60%, #fff9e8 100%),
+    #fffef7;
   border:2px solid var(--gold);
-  border-radius:18px;
-  padding:20px;
-  position:relative;
-  text-align:center;
+  border-radius:18px; padding:20px; position:relative; text-align:center;
+  /* subtle islamic geometry overlay */
+  --geo:url("data:image/svg+xml;utf8,\
+  <svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'>\
+   <g fill='none' stroke='%23E6D8A9' stroke-width='1'>\
+    <path d='M80 10l18 30h36l-18 30 18 30H98l-18 30L62 100H26l18-30-18-30h36z' opacity='.5'/>\
+    <circle cx='80' cy='80' r='20' opacity='.35'/>\
+   </g></svg>");
+  background-image: var(--geo), radial-gradient(120% 120% at 100% 0%, #fffef7 0%, #fffdf4 60%, #fff9e8 100%);
+  background-repeat: repeat, no-repeat;
+  background-size: 200px 200px, cover;
+  background-blend-mode: overlay, normal;
 }
 .certificate:before{
   content:""; position:absolute; inset:12px;
-  border:3px double var(--gold2); border-radius:12px;
+  border:3px double var(--gold2); border-radius:12px; pointer-events:none;
 }
-.cert-title{
-  font-size:26px; color:#9b7c2e; font-weight:800;
-}
-.cert-line{
-  margin:10px 0;
-}
-.cert-name{
-  font-size:28px; color:#c3922e; font-weight:900;
-}
+.cert-title{ font-size:26px; color:#9b7c2e; font-weight:800; }
+.cert-line{ margin:10px 0; }
+.cert-name{ font-size:28px; color:#c3922e; font-weight:900; }
 
-/* Letter */
-.letter{
-  background:#fafffc;
-  border:1px dashed #bcefdc;
-  padding:18px;
-  border-radius:14px;
-}
-.letter h3{
-  color:#0e9f74; margin-top:0;
-}
+/* ---------- Letter & Signature animation ---------- */
+.letter{ background:#fafffc; border:1px dashed #bcefdc; padding:18px; border-radius:14px; text-align:left; }
+.letter h3{ color:#0e9f74; margin-top:0; text-align:center; }
 
-/* Fireworks Canvas */
-#fwCanvas{
-  position:fixed; inset:0; pointer-events:none; z-index:9998;
+.sig{
+  margin-top:14px; display:flex; flex-direction:column; align-items:flex-end; gap:6px;
 }
+.sig .name{
+  font-weight:800; color:#0e9f74; opacity:0;
+  animation: fadeIn .7s ease .5s forwards;
+}
+.sig svg{
+  width:180px; height:24px; overflow:visible;
+}
+.sig path{
+  fill:none; stroke:#0e9f74; stroke-width:2.5; stroke-linecap:round;
+  stroke-dasharray:240; stroke-dashoffset:240; animation: draw 1.4s ease .1s forwards;
+}
+@keyframes draw{to{stroke-dashoffset:0;}}
+
+/* ---------- FX layers ---------- */
+#fwCanvas{ position:fixed; inset:0; pointer-events:none; z-index:9998; }
 
 /* Floating Balloons */
 .balloon{
-  position:fixed;
-  bottom:-150px;
-  width:40px;
-  height:60px;
-  border-radius:20px;
-  background:#ff6f91;
-  animation: floatUp 6s linear infinite;
-  z-index:9997;
-  opacity:0.85;
+  position:fixed; bottom:-150px; width:40px; height:58px; border-radius:20px;
+  background:#ff6f91; animation: floatUp 6s linear forwards; z-index:9997; opacity:.9;
 }
-@keyframes floatUp{
-  0%{ transform:translateY(0); opacity:1; }
-  100%{ transform:translateY(-120vh); opacity:0; }
-}
+.balloon:after{ content:""; position:absolute; top:56px; left:19px; width:2px; height:36px; background:rgba(0,0,0,.18); }
+@keyframes floatUp{ 0%{transform:translateY(0)} 100%{transform:translateY(-120vh)} }
 
-/* Sparkles */
-.sparkle{
-  position:fixed; bottom:-10px;
-  font-size:18px; opacity:.85; pointer-events:none; z-index:2;
-  animation:floatUpSpark 2s linear forwards;
+/* Noor particles */
+.glow{
+  position:fixed; bottom:-10px; width:8px; height:8px; border-radius:50%;
+  background: radial-gradient(circle at 40% 40%, #fff, #b6ffe4 60%, transparent 70%);
+  filter:blur(.3px); pointer-events:none; z-index:2; animation: rise 2.4s linear forwards;
 }
-@keyframes floatUpSpark{
-  0%{transform:translateY(0) scale(1);}
-  100%{transform:translateY(-140px) scale(.5);}
+@keyframes rise{ to{ transform:translateY(-160px) scale(.6); opacity:0;} }
+
+/* Toast (proud message) */
+.toast{
+  position:fixed; left:50%; bottom:20px; transform:translateX(-50%) translateY(20px);
+  background:#0bb27f; color:#fff; padding:10px 16px; border-radius:12px; font-weight:700;
+  opacity:0; z-index:9999;
 }
+.toast.show{ opacity:1; transform:translateX(-50%) translateY(0); transition:all .35s ease; }
 </style>
 </head>
 <body>
@@ -189,22 +223,35 @@ html,body{
 <canvas id="fwCanvas"></canvas>
 
 <div class="wrap">
-  <section class="section hero">
+  <!-- HERO / CONGRATS -->
+  <section class="section hero reveal-on-scroll">
     <div class="arabic">ما شاء الله</div>
-
     <div class="badge">MashaAllah • Alhamdulillah</div>
 
     <h1>Congratulations, Sakeena(Tanu)! 🎉</h1>
-
-    <p><b>Permanent position secured & Work Pass approved.</b></p>
+    <p><b>Permanent position secured &amp; Work Pass approved.</b></p>
     <p>May Allah fill your career with barakah, ease, and success. Ameen 🌙</p>
 
-    <!-- Step 2 & 3 Buttons -->
-    <button class="btn" id="btnCert">Open Certificate 🏆</button>
-    <div class="hint" id="hintCert">Tap to open your certificate 🎓</div>
+    <!-- Qur'anic Verse (Ar‑Rum 30:21) -->
+    <p class="verse reveal-on-scroll">
+      “And He placed between you affection and mercy.” — <b>Ar‑Rum 30:21</b>
+    </p>
 
-    <button class="btn" id="btnNote">Read My Note 💌</button>
-    <div class="hint" id="hintNote">Now read your special message 💗</div>
+    <!-- Sequential buttons -->
+    <div style="margin-top:16px">
+      <button class="btn" id="btnCert">Open Certificate 🏆</button>
+      <div class="hint" id="hintCert">Tap to open your certificate 🎓</div>
+
+      <div style="height:8px"></div>
+
+      <button class="btn" id="btnNote">Read My Note 💌</button>
+      <div class="hint" id="hintNote">Now read your special message 💗</div>
+    </div>
+
+    <!-- Share -->
+    <div class="shareRow">
+      <button class="btn-share" id="btnShare">Share this page 🔗</button>
+    </div>
   </section>
 </div>
 
@@ -212,27 +259,14 @@ html,body{
 <div class="modal" id="modal-cert">
   <div class="panel">
     <button class="close" data-close>&times;</button>
-
     <section class="certificate">
       <div class="cert-title">Certificate of Congratulations</div>
-
       <div class="cert-line">Presented to</div>
-
       <div class="cert-name">Sakeena Fathima</div>
-
-      <div class="cert-line">
-        for securing a position at <b>EY (Ernst & Young)</b>
-      </div>
-
-      <div class="cert-line">
-        as a <b>Software Engineer – Senior Associate</b>.
-      </div>
-
-      <div class="cert-line">
-        Your dedication, hard work, and faith have shone through. MashaAllah.
-      </div>
+      <div class="cert-line">for securing a position at <b>EY (Ernst &amp; Young)</b></div>
+      <div class="cert-line">as a <b>Software Engineer – Senior Associate</b>.</div>
+      <div class="cert-line">Your dedication, hard work, and faith have shone through. MashaAllah.</div>
     </section>
-
   </div>
 </div>
 
@@ -240,74 +274,78 @@ html,body{
 <div class="modal" id="modal-letter">
   <div class="panel">
     <button class="close" data-close>&times;</button>
-
     <section class="letter">
       <h3>A note from your husband 💌</h3>
-
       <p>Alhamdulillah, you did it, my love. Seeing you secure this role and receive your approved work pass made me truly proud.</p>
-
       <p>Your strength, sabr, and dedication inspire me every day. You deserve every bit of this success.</p>
-
       <p>May Allah bless your journey at EY, fill it with barakah, ease, and endless opportunities. Ameen.</p>
 
-      <p style="margin-top:10px;"><b>— Your husband</b></p>
+      <!-- Signature animation -->
+      <div class="sig">
+        <svg viewBox="0 0 200 24" aria-hidden="true">
+          <!-- a simple flourish underline drawn live -->
+          <path d="M2 14 Q 60 2, 100 14 T 198 14" />
+        </svg>
+        <div class="name">— Your husband</div>
+      </div>
     </section>
-
   </div>
 </div>
 
+<!-- Toast -->
+<div class="toast" id="toast">💚 I’m proud of you, Sakeena.</div>
+
 <script>
-/* Fireworks Setup */
+/* ---------------- Fireworks + Chime ---------------- */
 (function(){
-  const c=document.getElementById("fwCanvas");
-  const x=c.getContext("2d");
-  let W,H;
-  function size(){W=c.width=innerWidth;H=c.height=innerHeight;}
-  size(); addEventListener("resize",size);
+  const c=document.getElementById("fwCanvas"), x=c.getContext("2d");
+  let W,H; function size(){W=c.width=innerWidth;H=c.height=innerHeight;} size();
+  addEventListener("resize",size);
 
-  function r(a,b){return Math.random()*(b-a)+a;}
+  function rnd(a,b){return Math.random()*(b-a)+a;}
 
-  function fire(){
-    const parts=[];
-    const cx=r(W*0.2,W*0.8);
-    const cy=r(H*0.15,H*0.45);
+  function burst(){
+    const parts=[], cx=rnd(W*0.2,W*0.8), cy=rnd(H*0.15,H*0.45);
     const colors=["#ff3f8e","#0bb27f","#ffd166","#73a7ff","#ff8ec5","#7cf0c1"];
     const col=colors[(Math.random()*colors.length)|0];
-
     for(let i=0;i<60;i++){
-      const ang=Math.random()*6.28;
-      const sp=r(1.5,3.2);
-      parts.push({x:cx,y:cy,vx:Math.cos(ang)*sp,vy:Math.sin(ang)*sp,t:0,life:r(800,1400),color:col});
+      const ang=Math.random()*6.28, sp=rnd(1.5,3.2);
+      parts.push({x:cx,y:cy,vx:Math.cos(ang)*sp,vy:Math.sin(ang)*sp,t:0,life:rnd(800,1400),col});
     }
-
     let alive=true;
-    function draw(){
-      x.clearRect(0,0,W,H);
-      alive=false;
-
+    (function draw(){
+      x.clearRect(0,0,W,H); alive=false;
       for(const p of parts){
         p.t+=16;
         if(p.t<p.life){
-          alive=true;
-          p.vy+=0.015;
-          p.x+=p.vx*2;
-          p.y+=p.vy*2;
-          x.globalAlpha=1-p.t/p.life;
-          x.fillStyle=p.color;
-          x.beginPath();x.arc(p.x,p.y,2,0,6.28);x.fill();
+          alive=true; p.vy+=0.015; p.x+=p.vx*2; p.y+=p.vy*2;
+          x.globalAlpha=1-p.t/p.life; x.fillStyle=p.col;
+          x.beginPath(); x.arc(p.x,p.y,2,0,6.28); x.fill();
         }
       }
-
-      if(alive) requestAnimationFrame(draw);
-      else x.clearRect(0,0,W,H);
-    }
-    draw();
+      x.globalAlpha=1;
+      if(alive) requestAnimationFrame(draw); else x.clearRect(0,0,W,H);
+    })();
   }
 
-  fire(); setTimeout(fire,700);
+  // Soft chime using WebAudio (non-musical)
+  function chime(){
+    try{
+      const actx=new (window.AudioContext||window.webkitAudioContext)();
+      const o=actx.createOscillator(), g=actx.createGain();
+      o.type="sine"; o.frequency.setValueAtTime(880, actx.currentTime);
+      o.frequency.exponentialRampToValueAtTime(660, actx.currentTime+0.18);
+      g.gain.setValueAtTime(0.0001, actx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.15, actx.currentTime+0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime+0.35);
+      o.connect(g).connect(actx.destination); o.start(); o.stop(actx.currentTime+0.4);
+    }catch(e){}
+  }
+
+  burst(); setTimeout(burst,700); chime();
 })();
 
-/* Floating Balloons */
+/* ---------------- Balloons ---------------- */
 function spawnBalloon(){
   const b=document.createElement("div");
   b.className="balloon";
@@ -318,21 +356,22 @@ function spawnBalloon(){
   document.body.appendChild(b);
   setTimeout(()=>b.remove(),7000);
 }
-for(let i=0;i<15;i++){
-  setTimeout(spawnBalloon, i*300);
-}
+for(let i=0;i<16;i++) setTimeout(spawnBalloon, i*280);
 
-/* Sparkles */
+/* ---------------- Noor Particles ---------------- */
 setInterval(()=>{
-  const s=document.createElement("div");
-  s.className="sparkle";
-  s.textContent = Math.random()<0.5?"✨":"⭐";
-  s.style.left = (Math.random()*100)+"vw";
-  document.body.appendChild(s);
-  setTimeout(()=>s.remove(),2000);
-},900);
+  const g=document.createElement("div");
+  g.className="glow"; g.style.left=(Math.random()*100)+"vw";
+  document.body.appendChild(g); setTimeout(()=>g.remove(),2400);
+}, 900);
 
-/* Step Unlock Logic */
+/* ---------------- Scroll reveal ---------------- */
+const io=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('reveal'); });
+},{threshold:0.1});
+document.querySelectorAll('.reveal-on-scroll, .verse').forEach(el=>io.observe(el));
+
+/* ---------------- Sequential Unlock ---------------- */
 const btnCert=document.getElementById("btnCert");
 const btnNote=document.getElementById("btnNote");
 const hintCert=document.getElementById("hintCert");
@@ -341,41 +380,59 @@ const hintNote=document.getElementById("hintNote");
 const modalCert=document.getElementById("modal-cert");
 const modalNote=document.getElementById("modal-letter");
 
-/* STEP 1 DONE (Congrats screen visible) */
+// Reveal Certificate button after initial celebration
+setTimeout(()=>{ btnCert.style.display="inline-block"; hintCert.style.display="block"; }, 2600);
 
-/* STEP 2: reveal certificate button after fireworks */
-setTimeout(()=>{
-  btnCert.style.display="inline-block";
-  hintCert.style.display="block";
-}, 2500);
-
-/* OPEN certificate */
-btnCert.onclick=()=>{
-  modalCert.classList.add("show");
-};
-
-/* CLOSE certificate */
+// Open/close Certificate
+btnCert.onclick=()=> modalCert.classList.add("show");
 modalCert.querySelector("[data-close]").onclick=()=>{
   modalCert.classList.remove("show");
-
-  /* STEP 3: reveal message button */
+  // Unlock Note button next
   btnNote.style.display="inline-block";
   hintNote.style.display="block";
 };
 
-/* OPEN note */
-btnNote.onclick=()=>{
-  modalNote.classList.add("show");
-};
-
-/* CLOSE note */
+// Open/close Note
+btnNote.onclick=()=> modalNote.classList.add("show");
 modalNote.querySelector("[data-close]").onclick=()=>{
   modalNote.classList.remove("show");
 
-  /* STEP 4: final dinner message */
+  // Little glowing heart + sparkle before dinner dialog
+  const heart=document.createElement('div');
+  heart.textContent='💚'; heart.style.cssText=
+    'position:fixed; left:50%; top:55%; transform:translate(-50%,-50%) scale(0.7);'+
+    'font-size:42px; z-index:9999; transition:all .9s ease; filter:drop-shadow(0 0 8px rgba(11,178,127,.6))';
+  document.body.appendChild(heart);
+  requestAnimationFrame(()=> heart.style.transform='translate(-50%,-50%) scale(1.2)');
+  setTimeout(()=>{ heart.style.opacity='0'; }, 700);
+  setTimeout(()=> heart.remove(), 1100);
+
+  // Dinner dialog
   setTimeout(()=>{
     alert("Okie! Now let's go for a dinner to celebrate this beautiful achievement 💚✨");
-  }, 500);
+    // Proud toast
+    const t=document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'), 2600);
+  }, 900);
+};
+
+/* Close modals by clicking backdrop */
+document.querySelectorAll(".modal").forEach(m=>{
+  m.addEventListener('click', e=>{ if(e.target===m) m.classList.remove('show'); });
+});
+
+/* ---------------- Share button ---------------- */
+document.getElementById('btnShare').onclick = async ()=>{
+  const url = location.href;
+  const title = "MashaAllah! Congratulations, Sakeena(Tanu) 🎉";
+  const text = "Celebrate this small achievement and happy moment 💚";
+  if(navigator.share){
+    try{ await navigator.share({title, text, url}); }catch(e){}
+  }else{
+    try{ await navigator.clipboard.writeText(url); alert("Link copied! Share it with Sakeena 💚"); }
+    catch(e){ prompt("Copy this link:", url); }
+  }
 };
 </script>
 
