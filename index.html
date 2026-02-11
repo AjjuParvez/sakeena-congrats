@@ -36,13 +36,15 @@ html,body{
   border-radius:20px;
   padding:25px;
   box-shadow:0 12px 36px rgba(0,0,0,.08);
+  text-align:center;
 }
 
 /* Hero */
-.hero{
-  text-align:center;
-  background:linear-gradient(180deg,#fff,#f3fff9);
-  border:1px solid #c8f7e5;
+.arabic{
+  font-size:32px;
+  margin-bottom:10px;
+  color:#0aa06f;
+  font-weight:900;
 }
 
 .badge{
@@ -55,13 +57,6 @@ html,body{
   color:#0d9f70;
 }
 
-.arabic{
-  font-size:32px;
-  margin-bottom:10px;
-  color:#0aa06f;
-  font-weight:900;
-}
-
 .hero h1{
   color:#0bb27f;
   margin:12px 0;
@@ -70,10 +65,6 @@ html,body{
 .hero p{ margin:5px 0; }
 
 /* Buttons */
-.btns{
-  margin-top:18px;
-  display:flex; gap:12px; flex-wrap:wrap; justify-content:center;
-}
 .btn{
   padding:12px 20px;
   background:white;
@@ -82,13 +73,22 @@ html,body{
   border-radius:999px;
   font-weight:700;
   cursor:pointer;
+  display:none; /* hidden initially */
 }
 .btn:hover{
   background:#0bb27f;
   color:white;
 }
 
-/* Modal */
+.hint {
+  margin-top:12px;
+  font-size:16px;
+  font-weight:600;
+  color:#0bb27f;
+  display:none;
+}
+
+/* Modals */
 .modal{
   position:fixed; inset:0;
   background:rgba(0,0,0,.55);
@@ -122,19 +122,20 @@ html,body{
   border-radius:18px;
   padding:20px;
   position:relative;
+  text-align:center;
 }
 .certificate:before{
   content:""; position:absolute; inset:12px;
   border:3px double var(--gold2); border-radius:12px;
 }
 .cert-title{
-  text-align:center; font-size:26px; color:#9b7c2e; font-weight:800;
+  font-size:26px; color:#9b7c2e; font-weight:800;
 }
 .cert-line{
-  text-align:center; margin:10px 0;
+  margin:10px 0;
 }
 .cert-name{
-  text-align:center; font-size:28px; color:#c3922e; font-weight:900;
+  font-size:28px; color:#c3922e; font-weight:900;
 }
 
 /* Letter */
@@ -153,15 +154,32 @@ html,body{
   position:fixed; inset:0; pointer-events:none; z-index:9998;
 }
 
+/* Floating Balloons */
+.balloon{
+  position:fixed;
+  bottom:-150px;
+  width:40px;
+  height:60px;
+  border-radius:20px;
+  background:#ff6f91;
+  animation: floatUp 6s linear infinite;
+  z-index:9997;
+  opacity:0.85;
+}
+@keyframes floatUp{
+  0%{ transform:translateY(0); opacity:1; }
+  100%{ transform:translateY(-120vh); opacity:0; }
+}
+
 /* Sparkles */
 .sparkle{
   position:fixed; bottom:-10px;
   font-size:18px; opacity:.85; pointer-events:none; z-index:2;
-  animation:floatUp 2s linear forwards;
+  animation:floatUpSpark 2s linear forwards;
 }
-@keyframes floatUp{
-  0%{transform:translateY(0) scale(1);opacity:1;}
-  100%{transform:translateY(-140px) scale(.5);opacity:0;}
+@keyframes floatUpSpark{
+  0%{transform:translateY(0) scale(1);}
+  100%{transform:translateY(-140px) scale(.5);}
 }
 </style>
 </head>
@@ -171,9 +189,7 @@ html,body{
 <canvas id="fwCanvas"></canvas>
 
 <div class="wrap">
-
   <section class="section hero">
-
     <div class="arabic">ما شاء الله</div>
 
     <div class="badge">MashaAllah • Alhamdulillah</div>
@@ -183,12 +199,13 @@ html,body{
     <p><b>Permanent position secured & Work Pass approved.</b></p>
     <p>May Allah fill your career with barakah, ease, and success. Ameen 🌙</p>
 
-    <div class="btns">
-      <button class="btn" data-open="cert">Open Certificate 🏆</button>
-      <button class="btn" data-open="letter">Read My Note 💌</button>
-    </div>
-  </section>
+    <!-- Step 2 & 3 Buttons -->
+    <button class="btn" id="btnCert">Open Certificate 🏆</button>
+    <div class="hint" id="hintCert">Tap to open your certificate 🎓</div>
 
+    <button class="btn" id="btnNote">Read My Note 💌</button>
+    <div class="hint" id="hintNote">Now read your special message 💗</div>
+  </section>
 </div>
 
 <!-- CERTIFICATE MODAL -->
@@ -240,36 +257,7 @@ html,body{
 </div>
 
 <script>
-/* Modal Logic */
-const modals = {
-  cert: document.getElementById("modal-cert"),
-  letter: document.getElementById("modal-letter")
-};
-
-document.querySelectorAll("[data-open]").forEach(btn=>{
-  btn.onclick = () => modals[btn.dataset.open].classList.add("show");
-});
-
-document.querySelectorAll("[data-close]").forEach(btn=>{
-  btn.onclick = () => btn.closest(".modal").classList.remove("show");
-});
-
-/* Close modal on outside click */
-document.querySelectorAll(".modal").forEach(m=>{
-  m.onclick = e => { if(e.target===m) m.classList.remove("show"); };
-});
-
-/* Sparkles */
-setInterval(()=>{
-  const s=document.createElement("div");
-  s.className="sparkle";
-  s.textContent = Math.random()<0.5?"✨":"⭐";
-  s.style.left = (Math.random()*100)+"vw";
-  document.body.appendChild(s);
-  setTimeout(()=>s.remove(),2000);
-},900);
-
-/* Fireworks */
+/* Fireworks Setup */
 (function(){
   const c=document.getElementById("fwCanvas");
   const x=c.getContext("2d");
@@ -316,9 +304,79 @@ setInterval(()=>{
     draw();
   }
 
-  fire();
-  setTimeout(fire,700);
+  fire(); setTimeout(fire,700);
 })();
+
+/* Floating Balloons */
+function spawnBalloon(){
+  const b=document.createElement("div");
+  b.className="balloon";
+  const colors=["#ff6f91","#ff9671","#ffc75f","#f9f871","#88e0ef","#b088f9"];
+  b.style.background=colors[(Math.random()*colors.length)|0];
+  b.style.left=Math.random()*90+"vw";
+  b.style.animationDuration=(5+Math.random()*4)+"s";
+  document.body.appendChild(b);
+  setTimeout(()=>b.remove(),7000);
+}
+for(let i=0;i<15;i++){
+  setTimeout(spawnBalloon, i*300);
+}
+
+/* Sparkles */
+setInterval(()=>{
+  const s=document.createElement("div");
+  s.className="sparkle";
+  s.textContent = Math.random()<0.5?"✨":"⭐";
+  s.style.left = (Math.random()*100)+"vw";
+  document.body.appendChild(s);
+  setTimeout(()=>s.remove(),2000);
+},900);
+
+/* Step Unlock Logic */
+const btnCert=document.getElementById("btnCert");
+const btnNote=document.getElementById("btnNote");
+const hintCert=document.getElementById("hintCert");
+const hintNote=document.getElementById("hintNote");
+
+const modalCert=document.getElementById("modal-cert");
+const modalNote=document.getElementById("modal-letter");
+
+/* STEP 1 DONE (Congrats screen visible) */
+
+/* STEP 2: reveal certificate button after fireworks */
+setTimeout(()=>{
+  btnCert.style.display="inline-block";
+  hintCert.style.display="block";
+}, 2500);
+
+/* OPEN certificate */
+btnCert.onclick=()=>{
+  modalCert.classList.add("show");
+};
+
+/* CLOSE certificate */
+modalCert.querySelector("[data-close]").onclick=()=>{
+  modalCert.classList.remove("show");
+
+  /* STEP 3: reveal message button */
+  btnNote.style.display="inline-block";
+  hintNote.style.display="block";
+};
+
+/* OPEN note */
+btnNote.onclick=()=>{
+  modalNote.classList.add("show");
+};
+
+/* CLOSE note */
+modalNote.querySelector("[data-close]").onclick=()=>{
+  modalNote.classList.remove("show");
+
+  /* STEP 4: final dinner message */
+  setTimeout(()=>{
+    alert("Okie! Now let's go for a dinner to celebrate this beautiful achievement 💚✨");
+  }, 500);
+};
 </script>
 
 </body>
