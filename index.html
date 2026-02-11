@@ -44,6 +44,7 @@ html,body{
   background:linear-gradient(180deg,#fff,#f3fff9);
   border:1px solid #c8f7e5;
 }
+
 .badge{
   display:inline-block;
   background:#e4fff4;
@@ -53,20 +54,20 @@ html,body{
   font-weight:700;
   color:#0d9f70;
 }
-.hero h1{
-  color:#0bb27f;
-  margin:12px 0;
-  font-size:clamp(28px,6vw,40px);
-}
-.hero p{ margin:5px 0; }
 
-/* Arabic Calligraphy */
 .arabic{
   font-size:32px;
   margin-bottom:10px;
   color:#0aa06f;
   font-weight:900;
 }
+
+.hero h1{
+  color:#0bb27f;
+  margin:12px 0;
+  font-size:clamp(28px,6vw,40px);
+}
+.hero p{ margin:5px 0; }
 
 /* Buttons */
 .btns{
@@ -147,26 +148,6 @@ html,body{
   color:#0e9f74; margin-top:0;
 }
 
-/* Surprise Box Animation */
-.gift-box{
-  margin:20px auto 10px;
-  width:120px; height:120px;
-  background:url('https://i.imgur.com/9CZ0p9E.png') no-repeat center/contain;
-  cursor:pointer;
-  animation: bounce 2s infinite;
-}
-@keyframes bounce{
-  0%,100%{ transform:translateY(0); }
-  50%{ transform:translateY(-10px); }
-}
-.reveal-msg{
-  display:none;
-  margin-top:12px;
-  font-size:20px;
-  font-weight:700;
-  color:#0bb27f;
-}
-
 /* Fireworks Canvas */
 #fwCanvas{
   position:fixed; inset:0; pointer-events:none; z-index:9998;
@@ -202,9 +183,6 @@ html,body{
     <p><b>Permanent position secured & Work Pass approved.</b></p>
     <p>May Allah fill your career with barakah, ease, and success. Ameen 🌙</p>
 
-    <div class="gift-box" id="giftBox"></div>
-    <div class="reveal-msg" id="giftMsg">💚 Surprise Unlocked! 💚</div>
-
     <div class="btns">
       <button class="btn" data-open="cert">Open Certificate 🏆</button>
       <button class="btn" data-open="letter">Read My Note 💌</button>
@@ -213,7 +191,7 @@ html,body{
 
 </div>
 
-<!-- Certificate Modal -->
+<!-- CERTIFICATE MODAL -->
 <div class="modal" id="modal-cert">
   <div class="panel">
     <button class="close" data-close>&times;</button>
@@ -241,7 +219,7 @@ html,body{
   </div>
 </div>
 
-<!-- Letter Modal -->
+<!-- LETTER MODAL -->
 <div class="modal" id="modal-letter">
   <div class="panel">
     <button class="close" data-close>&times;</button>
@@ -290,11 +268,6 @@ setInterval(()=>{
   document.body.appendChild(s);
   setTimeout(()=>s.remove(),2000);
 },900);
-
-/* Surprise Box */
-document.getElementById("giftBox").onclick = () => {
-  document.getElementById("giftMsg").style.display = "block";
-};
 
 /* Fireworks */
 (function(){
